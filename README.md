@@ -11,7 +11,9 @@
 
 ## Usage
 
-To be done
+```sh
+docker run -p 80:80 bambutz/woltlab
+```
 
 ## Author
 
