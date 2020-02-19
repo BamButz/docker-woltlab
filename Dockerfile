@@ -37,4 +37,5 @@ COPY nginx-site.conf /etc/nginx/sites-enabled/default
 COPY entrypoint.sh /etc/entrypoint.sh
 
 EXPOSE 80 443
+VOLUME ["/var/www/woltlab"]
 ENTRYPOINT ["sh", "/etc/entrypoint.sh"]
