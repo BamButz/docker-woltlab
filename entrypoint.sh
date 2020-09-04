@@ -1,7 +1,4 @@
 #!/bin/sh
-service cron start
-service nginx start
-
 WOLTLAB_SOURCE=/opt/woltlab
 HTML_ROOT=/var/www/woltlab
 
@@ -11,4 +8,7 @@ if ! [ "$(ls -A $HTML_ROOT)" ]; then
     chown -R www-data:www-data $HTML_ROOT
 fi
 
-{ php-fpm & tail -f /var/log/nginx/access.log;}
+service cron start
+service nginx start
+
+{ php-fpm & tail -f /var/log/nginx/access.log; }
