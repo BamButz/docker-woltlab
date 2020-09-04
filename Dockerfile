@@ -35,7 +35,7 @@ RUN wget -O /tmp/woltlab.zip https://assets.woltlab.com/release/woltlab-suite-5.
     mv /tmp/woltlab/upload/* /opt/woltlab
 
 # Setup crontab
-COPY cron.php /var/www/woltlab/cron.php
+COPY cron.php /opt/woltlab/cron.php
 COPY crontab /etc/cron.d/woltlab-cron
 RUN chmod 0644 /etc/cron.d/woltlab-cron
 RUN crontab /etc/cron.d/woltlab-cron
