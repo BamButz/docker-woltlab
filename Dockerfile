@@ -16,7 +16,8 @@ RUN apt-get install -y \
         git \
         wget \
         unzip \
-        libmagickwand-dev
+        libmagickwand-dev \
+        cron
 
 # Install PHP Extensions
 RUN docker-php-ext-install pdo_mysql mysqli && \
@@ -26,16 +27,22 @@ RUN docker-php-ext-install pdo_mysql mysqli && \
     pecl install imagick && \
     docker-php-ext-enable imagick
 
-RUN wget -O /tmp/woltlab.zip https://assets.woltlab.com/release/woltlab-suite-5.2.2.zip && \
+# Include Woltlab Setup
+RUN wget -O /tmp/woltlab.zip https://assets.woltlab.com/release/woltlab-suite-5.2.9.zip && \
     unzip /tmp/woltlab.zip -d /tmp/woltlab && \
     mkdir -p /var/www/woltlab && \
-    mv /tmp/woltlab/upload/* /var/www/woltlab && \
-    chown -R www-data:www-data /var/www/woltlab
+    mkdir -p /opt/woltlab && \
+    mv /tmp/woltlab/upload/* /opt/woltlab
 
-WORKDIR /var/www/woltlab
+# Setup crontab
+COPY cron.php /var/www/woltlab/cron.php
+COPY crontab /etc/cron.d/woltlab-cron
+RUN chmod 0644 /etc/cron.d/woltlab-cron
+RUN crontab /etc/cron.d/woltlab-cron
+
 COPY nginx-site.conf /etc/nginx/sites-enabled/default
 COPY entrypoint.sh /etc/entrypoint.sh
 
-EXPOSE 80 443
-VOLUME ["/var/www/woltlab"]
+EXPOSE 80
+WORKDIR /var/www/woltlab
 ENTRYPOINT ["sh", "/etc/entrypoint.sh"]
